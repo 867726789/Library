@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人书籍仓库</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 个人书籍仓库</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#upload">上传书籍</a></li>
+                    <li><a href="#books">我的书库</a></li>
+                    <li><a href="#tags">标签分类</a></li>
+                </ul>
+                <div class="auth-section">
+                    <span id="user-info">游客</span>
+                    <button id="auth-toggle-btn">登录</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 登录模态框 -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-login-modal">&times;</span>
+                <h2 id="auth-title">登录</h2>
+                <form id="auth-form">
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-group" id="confirm-password-group" style="display: none;">
+                        <label for="confirm-password">确认密码</label>
+                        <input type="password" id="confirm-password">
+                    </div>
+                    <button type="submit" id="auth-submit-btn">登录</button>
+                </form>
+                <p class="toggle-auth">
+                    <a href="#" id="toggle-auth-mode">还没有账户？注册</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- 搜索和过滤区域 -->
+        <section id="search-section" class="search-section">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索书籍...">
+                <button id="search-btn">搜索</button>
+            </div>
+            <div class="tag-filter">
+                <select id="tag-filter-select">
+                    <option value="">全部标签</option>
+                </select>
+            </div>
+        </section>
+        
+        <div id="login-prompt" class="message info" style="display: none;">
+            <p>请先登录以搜索和浏览书籍</p>
+        </div>
+
+        <!-- 书籍上传区域 -->
+        <section id="upload" class="upload-section">
+            <h2>上传书籍</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="book-title">书名 *</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-author">作者 *</label>
+                    <input type="text" id="book-author" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-description">描述</label>
+                    <textarea id="book-description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-tags">标签（用逗号分隔）</label>
+                    <input type="text" id="book-tags" placeholder="如：技术,编程,小说">
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-file">选择文件 *</label>
+                    <input type="file" id="book-file" accept=".pdf,.epub,.mobi,.txt,.doc,.docx" required>
+                </div>
+                
+                <button type="submit">上传书籍</button>
+            </form>
+        </section>
+
+        <!-- 书籍列表区域 -->
+        <section id="books" class="books-section">
+            <h2>我的书库</h2>
+            <div id="books-container" class="books-grid">
+                <!-- 书籍卡片将动态加载 -->
+                <p class="loading-message">正在加载书籍...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 个人书籍仓库. 使用 Supabase 提供支持.</p>
+        </div>
+    </footer>
+
+    <script src="js/supabase-client.js"></script>
+    <script src="js/book-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
