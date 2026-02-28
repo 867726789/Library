@@ -184,25 +184,41 @@ document.addEventListener('DOMContentLoaded', function() {
             booksContainer.appendChild(bookCard);
         });
         
-        // 为所有下载按钮添加点击事件
+                // 为所有下载按钮添加点击事件
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', async function(e) {
                 e.preventDefault();
                 const bookId = this.getAttribute('data-book-id');
                 const filePath = this.getAttribute('data-file-path');
                 const fileName = this.getAttribute('data-file-name');
-                console.log('下载文件名1:', fileName);
                 if (bookId && filePath && fileName) {
                     const result = await bookManager.downloadBook(bookId, filePath, fileName);
                     if (result.success) {
-                        // 创建临时链接并触发下载
-                        const link = document.createElement('a');
-                        link.href = result.url;
-                        link.download = fileName;
-                        console.log('下载文件名2:', fileName);
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        try {
+                            // 使用fetch获取文件内容，创建blob URL
+                            const response = await fetch(result.url);
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            const blob = await response.blob();
+                            const blobUrl = URL.createObjectURL(blob);
+                            
+                            // 创建临时链接并触发下载
+                            const link = document.createElement('a');
+                            link.href = blobUrl;
+                            link.download = fileName;
+                            document.body.appendChild(link);
+                            link.click();
+                            
+                            // 清理
+                            setTimeout(() => {
+                                URL.revokeObjectURL(blobUrl);
+                                document.body.removeChild(link);
+                            }, 100);
+                        } catch (error) {
+                            console.error('下载文件时发生错误:', error);
+                            showMessage(`下载失败: ${error.message}`, 'error');
+                        }
                     } else {
                         showMessage(`下载失败: ${result.error}`, 'error');
                     }
