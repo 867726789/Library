@@ -12,7 +12,8 @@ if (typeof window.supabase === 'undefined') {
 // 从环境变量获取 Supabase 配置
 const SUPABASE_URL = 'https://ffaemlcndhosglpngoyr.supabase.co'; // 替换为你的 Supabase 项目 URL
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmYWVtbGNuZGhvc2dscG5nb3lyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxOTEyODEsImV4cCI6MjA4Nzc2NzI4MX0.2tfVV5cvBWcUYyTQ1YRTImmqVfPs98ZCj07b1dmRn2o'; // 为空字符串，因为我们只使用认证用户访问
-
+const STORAGE_BUCKET_NAME = 'books';
+const BOOKS_TABLE = 'books';
 // 创建 Supabase 客户端实例 - 使用 anon key 允许游客访问
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -89,6 +90,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 // 导出 supabase 实例和认证方法供其他模块使用
 window.supabaseClient = supabase;
 window.supabaseAuth = auth;
+window.STORAGE_BUCKET_NAME = STORAGE_BUCKET_NAME;
+window.BOOKS_TABLE = BOOKS_TABLE;
+
 
 // 导出认证检查方法
 window.isAuthenticated = auth.isAuthenticated;

@@ -254,6 +254,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const bookCard = createBookCard(book);
             booksContainer.appendChild(bookCard);
         });
+        
+        // 为所有下载按钮添加点击事件
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const bookId = this.getAttribute('data-book-id');
+                const filePath = this.getAttribute('data-file-path');
+                const fileName = this.getAttribute('data-file-name');
+                
+                if (bookId && filePath && fileName) {
+                    const result = await bookManager.downloadBook(bookId, filePath, fileName);
+                    if (result.success) {
+                        // 创建临时链接并触发下载
+                        const link = document.createElement('a');
+                        link.href = result.url;
+                        link.download = result.fileName;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        showMessage(`下载失败: ${result.error}`, 'error');
+                    }
+                }
+            });
+        });
     }
     
     // 创建书籍卡片
@@ -282,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>文件大小: ${fileSize}</p>
             <p>上传时间: ${formatDate(book.upload_date)}</p>
             <p>下载次数: ${book.download_count || 0}</p>
-            <a href="${book.file_url}" class="download-btn" target="_blank" download="${book.file_name}" onclick="incrementDownloadCount('${book.id}')">下载书籍</a>
+            <button class="download-btn" data-book-id="${book.id}" data-file-path="${book.file_path}" data-file-name="${book.file_name}">下载书籍</button>
         `;
         
         return card;
@@ -319,14 +344,6 @@ document.addEventListener('DOMContentLoaded', function() {
             day: '2-digit'
         });
     }
-    
-    // 增加下载计数
-    window.incrementDownloadCount = async function(bookId) {
-        // 延迟调用以确保下载已经开始
-        setTimeout(async () => {
-            await bookManager.incrementDownloadCount(bookId);
-        }, 1000);
-    };
     
     // 显示消息通知
     function showMessage(message, type) {
