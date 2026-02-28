@@ -46,10 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('search-btn');
     const tagFilterSelect = document.getElementById('tag-filter-select');
     
-    // 页面加载时检查用户认证状态，然后获取书籍
-    checkAuthStatus().then(() => {
-        loadBooks();
-    });
+    // 页面加载时直接获取书籍（支持游客模式）
+    loadBooks();
     
     // 认证相关事件监听器
     authToggleBtn.addEventListener('click', function() {
@@ -94,11 +92,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const file = fileInput.files[0];
         
+        // 调试：显示文件信息
+        console.log('文件名:', file.name);
+        console.log('文件类型:', file.type);
+        console.log('文件大小:', file.size);
+        
         // 验证文件类型
         const allowedTypes = ['application/pdf', 'application/epub+zip', 'application/x-mobipocket-ebook', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-        if (!allowedTypes.includes(file.type)) {
-            showMessage('不支持的文件类型，请上传 PDF, EPUB, MOBI, TXT, DOC 或 DOCX 文件', 'error');
+        
+        // 额外检查：通过文件扩展名判断EPUB文件
+        const isEpubByExtension = file.name.toLowerCase().endsWith('.epub');
+        
+        if (!allowedTypes.includes(file.type) && !isEpubByExtension) {
+            showMessage(`不支持的文件类型: ${file.type}，请上传 PDF, EPUB, MOBI, TXT, DOC 或 DOCX 文件`, 'error');
             return;
+        }
+        
+        // 如果是通过扩展名识别的EPUB文件，标准化类型
+        if (isEpubByExtension && !allowedTypes.includes(file.type)) {
+            console.log('通过扩展名识别为EPUB文件');
         }
         
         // 验证文件大小（例如限制为 100MB）
@@ -155,14 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 加载所有书籍
     async function loadBooks() {
-        // 检查用户是否已认证
-        const user = await window.supabaseAuth.getCurrentUser();
-        if (!user) {
-            booksContainer.innerHTML = '';
-            toggleLoginPrompt(true);
-            return;
-        }
-        
+        // 游客也可以加载书籍
         toggleLoginPrompt(false);
         booksContainer.innerHTML = '<p class="loading-message">正在加载书籍...</p>';
         
@@ -181,14 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 按标签过滤书籍
     async function filterBooksByTag(tag) {
-        // 检查用户是否已认证
-        const user = await window.supabaseAuth.getCurrentUser();
-        if (!user) {
-            booksContainer.innerHTML = '';
-            toggleLoginPrompt(true);
-            return;
-        }
-        
+        // 游客也可以按标签过滤
         toggleLoginPrompt(false);
         booksContainer.innerHTML = '<p class="loading-message">正在加载书籍...</p>';
         
@@ -204,14 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 执行搜索
     async function performSearch() {
-        // 检查用户是否已认证
-        const user = await window.supabaseAuth.getCurrentUser();
-        if (!user) {
-            booksContainer.innerHTML = '';
-            toggleLoginPrompt(true);
-            return;
-        }
-        
+        // 游客也可以搜索
         toggleLoginPrompt(false);
         const query = searchInput.value.trim();
         
@@ -401,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 隐藏登录提示
         toggleLoginPrompt(false);
         
-        showMessage('欢迎回来！', 'success');
+        showMessage('欢迎回来！您现在可以上传书籍了。', 'success');
     }
     
     // 处理用户登出
@@ -414,8 +405,11 @@ document.addEventListener('DOMContentLoaded', function() {
         authToggleBtn.removeEventListener('click', handleLogout);
         authToggleBtn.addEventListener('click', showLoginModal);
         
-        // 显示登录提示
-        toggleLoginPrompt(true);
+        // 游客模式下不显示登录提示，可以继续浏览
+        toggleLoginPrompt(false);
+        
+        // 重新加载书籍列表以确保游客可以浏览
+        loadBooks();
     }
     
     // 显示登录模态框

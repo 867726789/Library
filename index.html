@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人书籍仓库</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
 </head>
 <body>
     <header>
@@ -67,7 +67,7 @@
         </section>
         
         <div id="login-prompt" class="message info" style="display: none;">
-            <p>请先登录以搜索和浏览书籍</p>
+            <p>登录后可以上传书籍和管理您的书库</p>
         </div>
 
         <!-- 书籍上传区域 -->
@@ -90,8 +90,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="book-tags">标签（用逗号分隔）</label>
-                    <input type="text" id="book-tags" placeholder="如：技术,编程,小说">
+                    <label for="book-tags">标签（用逗号分隔，支持中英文逗号）</label>
+                    <input type="text" id="book-tags" placeholder="如：技术,编程,小说 或 技术，编程，小说">
                 </div>
                 
                 <div class="form-group">

@@ -17,7 +17,11 @@ class BookManager {
             }
             
             // 首先上传文件到 Supabase Storage
-            const fileName = `${Date.now()}_${file.name}`;
+            // 安全处理文件名，移除不支持的字符
+            console.log('原始文件名:', file.name);
+            const safeFileName = file.name.replace(/[^a-zA-Z0-9\.\-_]/g, '_');
+            const fileName = `${Date.now()}_${safeFileName}`;
+            console.log('处理后的文件名:', fileName);
             const { data: uploadData, error: uploadError } = await this.supabase
                 .storage
                 .from('books')
@@ -36,8 +40,8 @@ class BookManager {
                 .from('books')
                 .getPublicUrl(fileName);
 
-            // 将标签字符串转换为数组
-            const tags = bookData.tags ? bookData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+            // 将标签字符串转换为数组（支持中英文逗号分隔）
+            const tags = bookData.tags ? bookData.tags.replace(/，/g, ',').split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
             // 在数据库中插入书籍记录
             const { data: bookRecord, error: dbError } = await this.supabase
@@ -70,13 +74,7 @@ class BookManager {
     // 获取所有书籍
     async getAllBooks() {
         try {
-            // 检查用户是否已认证
-            const { data: { user }, error: authError } = await this.supabase.auth.getUser();
-            
-            if (authError || !user) {
-                throw new Error('请先登录后再查看书籍');
-            }
-            
+            // 游客也可以查看书籍列表
             const { data: books, error } = await this.supabase
                 .from('books')
                 .select('*')
@@ -97,12 +95,7 @@ class BookManager {
     // 按标签获取书籍
     async getBooksByTag(tag) {
         try {
-            // 检查用户是否已认证
-            const { data: { user }, error: authError } = await this.supabase.auth.getUser();
-            
-            if (authError || !user) {
-                throw new Error('请先登录后再查看书籍');
-            }
+            // 游客也可以按标签查看书籍
             
             const { data: books, error } = await this.supabase
                 .from('books')
@@ -124,12 +117,7 @@ class BookManager {
     // 搜索书籍
     async searchBooks(query) {
         try {
-            // 检查用户是否已认证
-            const { data: { user }, error: authError } = await this.supabase.auth.getUser();
-            
-            if (authError || !user) {
-                throw new Error('请先登录后再搜索书籍');
-            }
+            // 游客也可以搜索书籍
             
             const { data: books, error } = await this.supabase
                 .from('books')

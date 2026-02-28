@@ -2,6 +2,13 @@
 
 本文档将指导您如何正确配置和运行个人书籍仓库项目。
 
+## 项目功能说明
+
+本项目支持两种访问模式：
+
+1. **游客模式**：无需登录即可浏览、搜索和下载书籍
+2. **登录用户模式**：登录后可以上传书籍、管理书库等高级功能
+
 ## Supabase 配置
 
 ### 1. 创建 Supabase 项目
@@ -68,15 +75,10 @@ USING (bucket_id = 'books');
 -- 启用 RLS
 ALTER TABLE books ENABLE ROW LEVEL SECURITY;
 
--- 为认证用户提供读取权限
-CREATE POLICY "Allow authenticated users to read books" ON books 
-FOR SELECT TO authenticated 
+-- 为所有用户提供读取权限（支持游客模式）
+CREATE POLICY "Allow all users to read books" ON books 
+FOR SELECT TO public 
 USING (true);
-
--- 移除公共读取权限，只允许认证用户访问
--- CREATE POLICY "Allow all users to read books" ON books 
--- FOR SELECT TO public 
--- USING (true);
 
 -- 为认证用户提供插入权限
 CREATE POLICY "Allow authenticated users to insert books" ON books 
@@ -116,6 +118,8 @@ const SUPABASE_ANON_KEY = 'your_supabase_anon_key_here'; // 替换为你的 Supa
 
 将 `your_supabase_project_url_here` 替换为您的 Supabase 项目 URL，
 将 `your_supabase_anon_key_here` 替换为您的 anon key。
+
+**注意**：确保 anon key 已正确配置，这样游客模式才能正常工作。
 
 ## GitHub Pages 部署
 
