@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const authSubmitBtn = document.getElementById('auth-submit-btn');
     const toggleAuthMode = document.getElementById('toggle-auth-mode');
     const confirmPasswordGroup = document.getElementById('confirm-password-group');
-    const uploadSection = document.getElementById('upload');
     
     // 当前认证模式（true为注册，false为登录）
     let isSignUpMode = false;
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookManager = new BookManager(window.supabaseClient);
     
     // 获取DOM元素
-    const uploadForm = document.getElementById('upload-form');
     const booksContainer = document.getElementById('books-container');
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
@@ -72,75 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
     authForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         await handleAuthSubmit();
-    });
-    
-    // 上传表单提交事件
-    uploadForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // 获取表单数据
-        const title = document.getElementById('book-title').value;
-        const author = document.getElementById('book-author').value;
-        const description = document.getElementById('book-description').value;
-        const tags = document.getElementById('book-tags').value;
-        const fileInput = document.getElementById('book-file');
-        
-        if (!fileInput.files[0]) {
-            showMessage('请选择要上传的文件', 'error');
-            return;
-        }
-        
-        const file = fileInput.files[0];
-        
-        // 调试：显示文件信息
-        console.log('文件名:', file.name);
-        console.log('文件类型:', file.type);
-        console.log('文件大小:', file.size);
-        
-        // 验证文件类型
-        const allowedTypes = ['application/pdf', 'application/epub+zip', 'application/x-mobipocket-ebook', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-        
-        // 额外检查：通过文件扩展名判断EPUB文件
-        const isEpubByExtension = file.name.toLowerCase().endsWith('.epub');
-        
-        if (!allowedTypes.includes(file.type) && !isEpubByExtension) {
-            showMessage(`不支持的文件类型: ${file.type}，请上传 PDF, EPUB, MOBI, TXT, DOC 或 DOCX 文件`, 'error');
-            return;
-        }
-        
-        // 如果是通过扩展名识别的EPUB文件，标准化类型
-        if (isEpubByExtension && !allowedTypes.includes(file.type)) {
-            console.log('通过扩展名识别为EPUB文件');
-        }
-        
-        // 验证文件大小（例如限制为 100MB）
-        const maxSize = 100 * 1024 * 1024; // 100MB
-        if (file.size > maxSize) {
-            showMessage('文件过大，请上传小于 100MB 的文件', 'error');
-            return;
-        }
-        
-        // 准备书籍数据
-        const bookData = {
-            title,
-            author,
-            description,
-            tags
-        };
-        
-        // 显示上传进度消息
-        showMessage('正在上传书籍...', 'info');
-        
-        // 上传书籍
-        const result = await bookManager.uploadBook(bookData, file);
-        
-        if (result.success) {
-            showMessage('书籍上传成功！', 'success');
-            uploadForm.reset(); // 清空表单
-            loadBooks(); // 刷新书籍列表
-        } else {
-            showMessage(`上传失败: ${result.error}`, 'error');
-        }
     });
     
     // 搜索按钮点击事件
@@ -262,14 +191,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const bookId = this.getAttribute('data-book-id');
                 const filePath = this.getAttribute('data-file-path');
                 const fileName = this.getAttribute('data-file-name');
-                
+                console.log('下载文件名1:', fileName);
                 if (bookId && filePath && fileName) {
                     const result = await bookManager.downloadBook(bookId, filePath, fileName);
                     if (result.success) {
                         // 创建临时链接并触发下载
                         const link = document.createElement('a');
                         link.href = result.url;
-                        link.download = result.fileName;
+                        link.download = fileName;
+                        console.log('下载文件名2:', fileName);
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -389,10 +319,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 显示/隐藏登录提示
     function toggleLoginPrompt(show) {
         const loginPrompt = document.getElementById('login-prompt');
-        if (show) {
-            loginPrompt.style.display = 'block';
-        } else {
-            loginPrompt.style.display = 'none';
+        if (loginPrompt) {
+            if (show) {
+                loginPrompt.style.display = 'block';
+            } else {
+                loginPrompt.style.display = 'none';
+            }
         }
     }
     
@@ -400,7 +332,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function handleUserLoggedIn(user) {
         userInfoSpan.textContent = user.email;
         authToggleBtn.textContent = '登出';
-        uploadSection.classList.remove('require-auth');
         
         // 更新按钮功能为登出
         authToggleBtn.removeEventListener('click', showLoginModal);
@@ -409,14 +340,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // 隐藏登录提示
         toggleLoginPrompt(false);
         
-        showMessage('欢迎回来！您现在可以上传书籍了。', 'success');
+        showMessage('欢迎回来！', 'success');
     }
     
     // 处理用户登出
     function handleUserLoggedOut() {
         userInfoSpan.textContent = '游客';
         authToggleBtn.textContent = '登录';
-        uploadSection.classList.add('require-auth');
         
         // 更新按钮功能为显示登录
         authToggleBtn.removeEventListener('click', handleLogout);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人书籍仓库</title>
+    <title>上传书籍 - 个人书籍仓库</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
 </head>
@@ -13,10 +13,10 @@
             <h1>📚 个人书籍仓库</h1>
             <nav>
                 <ul>
-                    <li><a href="index.html" class="active">首页</a></li>
-                    <li><a href="upload.html">上传书籍</a></li>
-                    <li><a href="#books">我的书库</a></li>
-                    <li><a href="#tags">标签分类</a></li>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="upload.html" class="active">上传书籍</a></li>
+                    <li><a href="index.html#books">我的书库</a></li>
+                    <li><a href="index.html#tags">标签分类</a></li>
                 </ul>
                 <div class="auth-section">
                     <span id="user-info">游客</span>
@@ -53,30 +53,41 @@
             </div>
         </div>
         
-        <!-- 搜索和过滤区域 -->
-        <section id="search-section" class="search-section">
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="搜索书籍...">
-                <button id="search-btn">搜索</button>
-            </div>
-            <div class="tag-filter">
-                <select id="tag-filter-select">
-                    <option value="">全部标签</option>
-                </select>
-            </div>
-        </section>
-
         <div id="login-prompt" class="message info" style="display: none;">
             <p>登录后可以上传书籍和管理您的书库</p>
         </div>
 
-        <!-- 书籍列表区域 -->
-        <section id="books" class="books-section">
-            <h2>我的书库</h2>
-            <div id="books-container" class="books-grid">
-                <!-- 书籍卡片将动态加载 -->
-                <p class="loading-message">正在加载书籍...</p>
-            </div>
+        <!-- 书籍上传区域 -->
+        <section id="upload" class="upload-section">
+            <h2>上传书籍</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="book-title">书名 *</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-author">作者 *</label>
+                    <input type="text" id="book-author" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-description">描述</label>
+                    <textarea id="book-description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-tags">标签（用逗号分隔，支持中英文逗号）</label>
+                    <input type="text" id="book-tags" placeholder="如：技术,编程,小说 或 技术，编程，小说">
+                </div>
+                
+                <div class="form-group">
+                    <label for="book-file">选择文件 *</label>
+                    <input type="file" id="book-file" accept=".pdf,.epub,.mobi,.txt,.doc,.docx" required>
+                </div>
+                
+                <button type="submit">上传书籍</button>
+            </form>
         </section>
     </main>
 
@@ -88,6 +99,6 @@
 
     <script src="js/supabase-client.js"></script>
     <script src="js/book-manager.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/upload.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* 重置默认样式 */
+/* 基础样式 */
 * {
     margin: 0;
     padding: 0;
@@ -9,101 +9,118 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f5f7fa;
+    background-color: #f5f5f5;
 }
 
 .container {
+    width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 20px;
 }
 
 /* 头部样式 */
 header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #4CAF50;
     color: white;
     padding: 1rem 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 header h1 {
     font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin-bottom: 1rem;
 }
 
-header nav ul {
-    display: flex;
+nav ul {
     list-style: none;
-    gap: 2rem;
-    align-items: center;
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-header nav a {
+nav ul li a {
     color: white;
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    color: #ffeb3b;
+}
+
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#user-info {
+    font-weight: 500;
+}
+
+#auth-toggle-btn {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-header nav a:hover,
-header nav a.active {
-    background-color: rgba(255, 255, 255, 0.2);
+#auth-toggle-btn:hover {
+    background-color: rgba(255,255,255,0.3);
 }
 
-/* 主内容区 */
+/* 主要内容样式 */
 main {
+    min-height: 70vh;
     padding: 2rem 0;
 }
 
 /* 搜索和过滤区域 */
 .search-section {
-    background: white;
+    background-color: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .search-box {
     display: flex;
-    gap: 0.5rem;
     flex: 1;
-    min-width: 250px;
+    min-width: 300px;
 }
 
 #search-input {
     flex: 1;
     padding: 0.75rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 4px 0 0 4px;
     font-size: 1rem;
 }
 
 #search-btn {
-    padding: 0.75rem 1.5rem;
-    background-color: #667eea;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
-    font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
 #search-btn:hover {
-    background-color: #5a6fd8;
+    background-color: #45a049;
 }
 
 .tag-filter select {
@@ -111,43 +128,42 @@ main {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
-    min-width: 150px;
+    min-width: 200px;
 }
 
-/* 上传区域 */
+/* 书籍上传区域 */
 .upload-section {
-    background: white;
+    background-color: white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
 }
 
 .upload-section h2 {
     margin-bottom: 1.5rem;
     color: #333;
-    font-size: 1.5rem;
 }
 
-#upload-form {
-    display: grid;
-    gap: 1.5rem;
+.upload-section.require-auth {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
-    font-weight: 600;
-    color: #555;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
+    width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -155,51 +171,46 @@ main {
 }
 
 .form-group textarea {
-    min-height: 100px;
     resize: vertical;
+    min-height: 100px;
 }
 
-#upload-form button {
-    padding: 0.75rem 2rem;
-    background-color: #28a745;
+.form-group button[type="submit"] {
+    background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 0.75rem 1.5rem;
     border-radius: 4px;
-    cursor: pointer;
     font-size: 1rem;
-    width: fit-content;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-#upload-form button:hover {
-    background-color: #218838;
+.form-group button[type="submit"]:hover {
+    background-color: #45a049;
 }
 
 /* 书籍列表区域 */
 .books-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
 }
 
 .books-section h2 {
     margin-bottom: 1.5rem;
     color: #333;
-    font-size: 1.5rem;
 }
 
 .books-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
 }
 
 .book-card {
-    border: 1px solid #eee;
-    border-radius: 8px;
+    background-color: white;
     padding: 1.5rem;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -210,117 +221,61 @@ main {
 
 .book-title {
     font-size: 1.2rem;
-    font-weight: 600;
     margin-bottom: 0.5rem;
     color: #333;
 }
 
 .book-author {
     color: #666;
-    margin-bottom: 0.5rem;
-    font-style: italic;
+    margin-bottom: 0.75rem;
 }
 
 .book-description {
-    color: #777;
     margin-bottom: 1rem;
-    font-size: 0.9rem;
+    color: #555;
     line-height: 1.5;
 }
 
 .book-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
 .tag {
-    background-color: #e9ecef;
-    color: #495057;
-    padding: 0.25rem 0.5rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    display: inline-block;
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .download-btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
+    background-color: #2196F3;
     color: white;
-    text-decoration: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 1rem;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 
 .download-btn:hover {
-    background-color: #0056b3;
+    background-color: #0b7dda;
 }
 
-.loading-message {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-    font-style: italic;
-}
-
-.empty-message {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-    font-style: italic;
-}
-
-/* 底部 */
-footer {
-    background: #333;
-    color: white;
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 3rem;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    header nav ul {
-        justify-content: center;
-    }
-    
-    .search-section {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .search-box {
-        min-width: auto;
-    }
-    
-    .books-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .container {
-        padding: 0 15px;
-    }
-    
-    main {
-        padding: 1rem 0;
-    }
-}
-
-/* 消息提示 */
+/* 消息提示样式 */
 .message {
     padding: 1rem;
-    margin: 1rem 0;
     border-radius: 4px;
-    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 500;
 }
 
 .message.success {
@@ -341,32 +296,16 @@ footer {
     border: 1px solid #bee5eb;
 }
 
-/* 认证相关样式 */
-.auth-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+/* 加载和错误消息 */
+.loading-message,
+.error-message,
+.empty-message {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
 }
 
-#user-info {
-    color: white;
-    font-weight: bold;
-}
-
-#auth-toggle-btn {
-    padding: 0.5rem 1rem;
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#auth-toggle-btn:hover {
-    background-color: #ff5252;
-}
-
-/* 登录模态框样式 */
+/* 登录模态框 */
 .modal {
     display: none;
     position: fixed;
@@ -375,18 +314,19 @@ footer {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto;
+    margin: 15% auto;
     padding: 2rem;
     border: 1px solid #888;
-    border-radius: 8px;
     width: 90%;
     max-width: 400px;
-    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .close {
@@ -394,19 +334,14 @@ footer {
     float: right;
     font-size: 28px;
     font-weight: bold;
-    position: absolute;
-    right: 1rem;
-    top: 0.5rem;
     cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
-    color: #000;
-}
-
-#auth-form {
-    margin-top: 1.5rem;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .toggle-auth {
@@ -414,16 +349,37 @@ footer {
     text-align: center;
 }
 
-.toggle-auth a {
-    color: #667eea;
-    text-decoration: none;
+/* 页脚样式 */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
 }
 
-.toggle-auth a:hover {
-    text-decoration: underline;
-}
-
-/* 上传表单在未登录时隐藏 */
-#upload.require-auth {
-    display: none;
+/* 响应式设计 */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        min-width: 100%;
+    }
+    
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
 }
